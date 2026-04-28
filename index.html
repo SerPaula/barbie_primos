@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barbie Number Checker</title>
+    <!-- Importando Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fuente elegante de Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            /* Rosa Barbie Clásico */
+            background-color: #ff69b4; 
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        .barbie-title {
+            font-family: 'Dancing Script', cursive;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Estilo para las partículas animadas */
+        .particle {
+            position: fixed;
+            bottom: -10%;
+            font-size: 2.5rem;
+            pointer-events: none;
+            z-index: 100;
+            animation: floatUp 4s linear forwards;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-110vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Personalización de colores Barbie */
+        .bg-barbie-pink { background-color: #e0218a; }
+        .text-barbie-pink { color: #e0218a; }
+        .border-barbie-pink { border-color: #e0218a; }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <!-- Card Principal -->
+    <div class="bg-white/95 backdrop-blur-md rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.2)] w-full max-w-md p-10 border-4 border-pink-100 relative overflow-hidden">
+        
+        <!-- Decoración de fondo del card -->
+        <div class="absolute -top-10 -right-10 w-32 h-32 bg-pink-50 rounded-full opacity-60"></div>
+        <div class="absolute -bottom-10 -left-10 w-24 h-24 bg-pink-100 rounded-full opacity-60"></div>
+
+        <!-- Encabezado con Ícono -->
+        <div class="text-center mb-8 relative">
+            <div class="bg-pink-100 text-barbie-pink w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-md border-2 border-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
+            </div>
+            <h1 class="text-4xl barbie-title text-barbie-pink font-bold">Barbie Primos</h1>
+            <p class="text-pink-400 font-medium text-sm mt-1 uppercase tracking-widest">Calculadora de Estrellas</p>
+        </div>
+
+        <!-- Formulario -->
+        <div class="space-y-6 relative">
+            <div>
+                <label for="numberInput" class="block text-xs font-bold text-pink-500 uppercase tracking-widest mb-2 ml-1">Escribe tu número:</label>
+                <input 
+                    type="number" 
+                    id="numberInput" 
+                    class="w-full px-6 py-4 rounded-2xl border-2 border-pink-200 focus:ring-4 focus:ring-pink-300 focus:border-barbie-pink outline-none transition-all text-xl text-center font-bold text-pink-600 bg-pink-50/30"
+                    placeholder="¿Es mágico?"
+                    min="0"
+                >
+            </div>
+            <button 
+                onclick="verificarPrimo()" 
+                class="w-full bg-barbie-pink hover:bg-pink-600 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 shadow-xl shadow-pink-200 hover:shadow-pink-300 active:scale-95 flex justify-center items-center gap-2 uppercase tracking-wider"
+            >
+                <span>¡Verificar!</span>
+                <span>✨</span>
+            </button>
+        </div>
+
+        <!-- Contenedor del resultado -->
+        <div id="resultContainer" class="mt-8 hidden fade-in rounded-2xl p-6 text-center border-2 border-dashed relative">
+            <!-- Dinámico -->
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Función para crear la lluvia de iconos
+        function spawnParticles(type) {
+            // Estrellas luminosas para primos, caritas tristes para no primos
+            const icons = type === 'primo' ? ['⭐', '🌟', '✨', '💫', '🤩'] : ['😢', '☹️', '☁️', '💔', '😔'];
+            const count = 35;
+
+            for (let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    const p = document.createElement('div');
+                    p.className = 'particle';
+                    p.innerText = icons[Math.floor(Math.random() * icons.length)];
+                    p.style.left = Math.random() * 100 + 'vw';
+                    p.style.fontSize = (Math.random() * 2 + 1.5) + 'rem';
+                    p.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    
+                    // Si es primo, le damos un brillo extra
+                    if (type === 'primo') {
+                        p.style.filter = 'drop-shadow(0 0 15px #fff700)';
+                    }
+                    
+                    document.body.appendChild(p);
+
+                    // Limpiar el DOM después de la animación
+                    setTimeout(() => p.remove(), 4000);
+                }, i * 80);
+            }
+        }
+
+        function verificarPrimo() {
+            const input = document.getElementById('numberInput');
+            const val = input.value.trim();
+
+            if (val === '') {
+                showMsg('¡Escribe un número, linda! No lo dejes vacío. ✨', 'warn');
+                return;
+            }
+
+            const n = parseInt(val);
+
+            if (isNaN(n)) {
+                showMsg('¡Ups! Eso no parece un número.', 'warn');
+                return;
+            }
+
+            // Lógica de Números Primos
+            let esPrimo = true;
+            if (n <= 1) {
+                esPrimo = false;
+            } else {
+                for (let i = 2; i <= Math.sqrt(n); i++) {
+                    if (n % i === 0) {
+                        esPrimo = false;
+                        break;
+                    }
+                }
+            }
+
+            // Aplicar efectos y mensaje
+            if (esPrimo) {
+                showMsg(`¡Mágico! El <b>${n}</b> es un número primo. ✨`, 'success');
+                spawnParticles('primo');
+            } else {
+                showMsg(`¡Oh no! El <b>${n}</b> no es un número primo.`, 'error');
+                spawnParticles('triste');
+            }
+        }
+
+        function showMsg(msg, type) {
+            const res = document.getElementById('resultContainer');
+            res.classList.remove('hidden');
+            res.innerHTML = msg;
+
+            // Estilos de la caja de mensaje
+            if (type === 'success') {
+                res.className = 'mt-8 fade-in rounded-2xl p-6 text-center border-2 border-green-200 bg-green-50 text-green-700 font-bold';
+            } else if (type === 'error') {
+                res.className = 'mt-8 fade-in rounded-2xl p-6 text-center border-2 border-pink-200 bg-pink-50 text-pink-700 font-bold';
+            } else {
+                res.className = 'mt-8 fade-in rounded-2xl p-6 text-center border-2 border-yellow-200 bg-yellow-50 text-yellow-700 font-bold';
+            }
+        }
+
+        // Soporte para tecla Enter
+        document.getElementById('numberInput').addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') verificarPrimo();
+        });
+    </script>
+</body>
+</html>
